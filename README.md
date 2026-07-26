@@ -218,5 +218,5 @@ Current progress:
 
 ## Disclaimer
 
-This project is an independent educational and portfolio project using publicly available research data. It is intended to explore applications of machine learning in pharmacogenomics and drug-response prediction and is not intended for clinical decision-making.
+This project is an independent educational and portfolio project using publicly available research data. It is intended to explore applications of machine learning in pharmacogenomics and drug-response prediction and is not intended for clinical decision-making. It does not contain confidential information and does not represent the views, research or intellectual property of my employer.
 
