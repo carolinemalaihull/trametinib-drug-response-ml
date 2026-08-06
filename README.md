@@ -1,222 +1,184 @@
-# Predicting Trametinib Sensitivity from Cancer Driver Mutations
+# Predicting Trametinib Sensitivity Using Cancer Driver Mutations 
 
-## Overview
+A machine learning data preparation and exploratory analysis project integrating genomic mutation data with pharmacological drug response measurements.
 
-This project explores whether cancer driver mutation profiles can be used to predict the response of cancer cell lines to Trametinib using machine learning.
+## Project Overview
 
-Trametinib is a targeted inhibitor of MEK1 and MEK2, key components of the RAS–RAF–MEK–ERK (MAPK) signalling pathway. Dysregulation of this pathway is common across multiple cancer types and can occur through genomic alterations affecting genes including KRAS, NRAS, BRAF, NF1, and other pathway-associated genes.
+Targeted cancer therapies can produce dramatically different responses between patients, even when tumours arise from the same tissue. One important reason is the underlying genomic landscape of the cancer.
 
-Using publicly available pharmacogenomic data, this project investigates whether genomic features of cancer cell lines are associated with differential sensitivity to Trametinib and whether these features can be used to build predictive machine learning models.
+This project investigates whether driver mutations can be integrated with drug response data to support future machine learning models capable of predicting sensitivity to Trametinib, a clinically approved MEK inhibitor.
 
-## Research Question
+Using publicly available datasets from the Genomics of Drug Sensitivity in Cancer (GDSC) and Cell Model Passports, mutation profiles were merged with pharmacological response measurements to produce a high-quality dataset suitable for predictive modelling.
 
-**Can cancer driver mutation profiles predict cancer cell line sensitivity to Trametinib?**
+This repository focuses on:
 
-A secondary biological question is:
-
-**Which genomic alterations are most strongly associated with predicted sensitivity or resistance to Trametinib?**
+Data integration
+Data cleaning and preprocessing
+Exploratory data analysis (EDA)
+Feature preparation for machine learning
+Model development 
 
 ## Biological Background
 
-The MAPK signalling pathway plays an important role in regulating cell proliferation, differentiation, and survival.
+Cancer develops through the accumulation of genetic alterations.
+Some mutations are driver mutations, meaning they directly contribute to tumour development by altering important signalling pathways.
+
+Trametinib targets the MAPK signalling pathway, making mutations in genes such as:
+
+BRAF
+KRAS
+NRAS
+NF1
+
+particularly relevant when investigating drug sensitivity.
+
+Understanding how these genomic alterations relate to drug response could ultimately support:
+
+Biomarker discovery
+Patient stratification
+Precision oncology
+Personalised medicine
+
+## Objectives
+
+The objectives of this project were to:
+
+Merge genomic mutation and drug response datasets
+Clean and validate the integrated dataset
+Perform exploratory data analysis
+Investigate mutation distributions
+Explore relationships between mutation burden and Trametinib response
+Produce a machine learning-ready dataset
+Datasets
+Cell Model Passports
+
+Contains genomic information for hundreds of cancer cell lines including:
+
+Driver mutations
+Gene annotations
+Mutation effects
+
+https://cellmodelpassports.sanger.ac.uk/
+
+Genomics of Drug Sensitivity in Cancer (GDSC)
+
+Contains drug response measurements across large cancer cell line panels.
+
+Drug response was measured using:
+
+LN(IC50)
+Area Under Curve (AUC)
 
-A simplified representation of the pathway is:
+https://www.cancerrxgene.org/
 
-Receptor Tyrosine Kinase (RTK)
+## Technologies Used
 
-↓
+Python
+pandas
+NumPy
+matplotlib
+seaborn
+SciPy
+Jupyter Notebook
+Project Workflow
+Raw GDSC Drug Response
+            │
+            ▼
+Filter Trametinib
+            │
+            ▼
+Load Cell Model Passports Mutations
+            │
+            ▼
+Standardise identifiers
+            │
+            ▼
+Merge datasets
+            │
+            ▼
+Data cleaning
+            │
+            ▼
+Exploratory Data Analysis
+            │
+            ▼
+Machine Learning-ready dataset
+Exploratory Analysis
 
-RAS (KRAS / NRAS / HRAS)
+The exploratory analysis included:
 
-↓
+Distribution of Trametinib sensitivity
+Cancer type composition
+Driver mutation frequencies
+MAPK pathway mutation burden
+Mutation burden versus drug sensitivity
+Correlation analysis
+Summary statistics
+Repository Structure
+├── notebooks/
+│   └── 01_data_exploration.ipynb
+│
+├── data/
+│   ├── GDSC2_fitted_dose_response_27Oct23.xlsx
+│   └── mutations_summary_20260724.csv
+│
+├── figures/
+│
+├── README.md
+└── requirements.txt
 
-RAF (e.g. BRAF)
+## Running the Notebook
 
-↓
+Clone the repository
 
-MEK1 / MEK2
+git clone https://github.com/carolinemalaihull/trametinib-drug-response-ml.git
 
-↓
+Install dependencies
 
-ERK1 / ERK2
+pip install -r requirements.txt
 
-↓
+Download the public datasets from:
 
-Cell proliferation and survival
+Cell Model Passports
+GDSC
 
-Trametinib inhibits MEK1 and MEK2, reducing downstream MAPK signalling.
+Place them inside
 
-Genomic alterations affecting this pathway may influence how dependent a cancer cell is on MAPK signalling and therefore potentially affect its response to MEK inhibition. However, the relationship between individual mutations and drug response is complex and may depend on additional genomic alterations and tumour lineage.
+data/
 
-This project uses machine learning to investigate these relationships rather than assuming that the presence of a specific mutation necessarily causes sensitivity or resistance.
+Run
 
-## Data Sources
+notebooks/01_data_exploration.ipynb
+Future Work
 
-### Genomics of Drug Sensitivity in Cancer (GDSC)
+Future development will include:
 
-Drug-response measurements are obtained from the Genomics of Drug Sensitivity in Cancer (GDSC) resource.
+Feature engineering
+Mutation encoding
+Machine learning classification
+Regression modelling
+Cross-validation
+Model interpretation using SHAP values
+Biomarker identification
+Disclaimer
 
-The dataset contains experimental measurements of cancer cell line responses to anti-cancer compounds.
+This repository contains work completed using publicly available datasets for educational and portfolio purposes.
 
-For this project, the analysis is restricted to cancer cell lines treated with **Trametinib**.
+The analyses, code and interpretations are my own and do not represent the views or research programmes of my employer.
 
-The primary drug-response variable is:
+No proprietary or confidential data are included.
 
-- `LN_IC50` — the natural logarithm of the half-maximal inhibitory concentration (IC50).
+Author
 
-Lower IC50 values generally indicate that a lower concentration of drug is required to inhibit cell growth, consistent with greater drug sensitivity.
+Caroline Hull, PhD
 
-### Cell Model Passports
+Associate Director, Translational Oncology
+Machine Learning & AI (Master's) Student
 
-Cancer driver mutation data are obtained from the Cell Model Passports resource.
+Interests
 
-The mutation dataset contains genomic alterations identified across cancer cell models, including:
-
-- Gene
-- Protein mutation
-- Mutation effect
-- Variant allele frequency (VAF)
-- Cancer driver annotation
-
-Cell models are linked between the mutation and drug-response datasets using the Sanger Model ID.
-
-## Dataset Overview
-
-The GDSC drug-response dataset contains:
-
-- 242,036 drug–cell line response observations
-- Multiple anti-cancer compounds
-- Drug targets and associated pathways
-- Experimental response measurements including `LN_IC50` and AUC
-
-For Trametinib specifically:
-
-- 966 unique cancer cell lines have drug-response measurements
-- 948 of these cell lines also have corresponding records in the driver mutation dataset
-- Mutation-data coverage is approximately 98.1%
-
-This provides a dataset in which experimentally measured Trametinib response can be integrated with genomic information.
-
-## Planned Features
-
-The initial analysis will investigate driver mutations affecting the MAPK pathway and related cancer signalling pathways.
-
-Candidate genomic features include:
-
-- BRAF
-- KRAS
-- NRAS
-- HRAS
-- NF1
-- MAP2K1
-- MAP2K2
-- EGFR
-- ERBB2
-- PIK3CA
-- PTEN
-- TP53
-
-Mutation information will be transformed into model-level features suitable for machine learning.
-
-Cancer type may also be included as a feature to account for differences in drug response associated with tumour lineage.
-
-## Target Variable
-
-The initial machine learning task will be formulated as a **regression problem**.
-
-**Target:**
-
-`LN_IC50`
-
-The objective is to predict experimentally measured Trametinib response from genomic characteristics of each cancer cell line.
-
-A future extension may investigate classification of cell lines into sensitive and resistant groups, provided that a biologically and statistically justified threshold can be defined.
-
-## Project Workflow
-
-The planned workflow is:
-
-1. Data acquisition and validation
-2. Exploratory data analysis
-3. Integration of GDSC drug-response and Cell Model Passports mutation data
-4. Genomic feature engineering
-5. Data preprocessing
-6. Exploratory analysis of mutation–response relationships
-7. Machine learning model development
-8. Model evaluation and comparison
-9. Feature importance and model interpretation
-10. Biological interpretation of potential sensitivity and resistance markers
-
-## Planned Machine Learning Models
-
-Initial models may include:
-
-- Linear Regression / Regularised Regression
-- Random Forest Regression
-- Gradient Boosting / XGBoost
-
-Model performance will be evaluated using appropriate regression metrics, potentially including:
-
-- Mean Absolute Error (MAE)
-- Root Mean Squared Error (RMSE)
-- R²
-
-Cross-validation will be used where appropriate to estimate model generalisation performance.
-
-## Model Interpretation
-
-An important objective of this project is not only to predict drug response but also to investigate which genomic features contribute to model predictions.
-
-Potential approaches include:
-
-- Feature importance
-- Permutation importance
-- SHAP values
-
-This may help identify genomic alterations associated with predicted Trametinib sensitivity or resistance.
-
-These associations will be interpreted as exploratory and hypothesis-generating rather than evidence of causal biological relationships.
-
-## Limitations
-
-Several limitations should be considered:
-
-- Cancer cell lines are experimental models and do not fully represent patient tumours.
-- Mutation status alone may not capture all mechanisms influencing drug response.
-- Gene expression, copy-number variation, epigenetic state, and protein activity may also influence Trametinib sensitivity.
-- Associations identified by machine learning do not establish causality.
-- Findings from computational analysis would require experimental and clinical validation.
-
-## Future Work
-
-Future extensions could incorporate additional molecular data, including:
-
-- Gene expression
-- Copy-number alterations
-- Proteomic data
-- Additional cancer driver mutations
-
-The project could also be expanded to compare responses across multiple MEK inhibitors or investigate whether models trained on one compound generalise to other drugs targeting the same pathway.
-
-## Project Status
-
-**In progress**
-
-Current progress:
-
-- [x] GDSC drug-response data acquired
-- [x] Cancer driver mutation data acquired
-- [x] Data sources linked using Sanger Model IDs
-- [x] Trametinib selected as the initial compound
-- [x] Drug-response and mutation-data overlap assessed
-- [ ] Exploratory data analysis
-- [ ] Mutation feature engineering
-- [ ] Final dataset construction
-- [ ] Machine learning modelling
-- [ ] Model interpretation
-- [ ] Biological interpretation
-
-## Disclaimer
-
-This project is an independent educational and portfolio project using publicly available research data. It is intended to explore applications of machine learning in pharmacogenomics and drug-response prediction and is not intended for clinical decision-making. It does not contain confidential information and does not represent the views, research or intellectual property of my employer.
-
+Translational oncology
+Cancer immunology
+Machine learning
+Precision medicine
+AI for drug discovery
